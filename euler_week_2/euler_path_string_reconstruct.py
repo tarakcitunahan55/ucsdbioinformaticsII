@@ -1,13 +1,13 @@
 """
 String Reconstruction Problem
 ==============================
-Given a collection of k-mers (Patterns), reconstruct a string Text (genome) whose
+Given a collection of k-mers (Patterns), reconstruct a string Text (linear genome) whose
 k-mer composition equals Patterns.
 
 Pipeline:
     1. DeBruijn(Patterns)   -> build the de Bruijn graph from the k-mers
     2. EulerianPath(dB)     -> find an Eulerian path through that graph
-    3. PathToGenome(path)   -> spell out the genome string from that path
+    3. PathToGenome(path)   -> spell out the linear genome string from that path
 
 """
 
@@ -107,7 +107,7 @@ def eulerian_path(graph):
     start, end = find_start_and_end(graph)
 
     if start is None:
-        # Graph already perfectly balanced everywhere -> true Eulerian cycle
+        #This branch only matters for graphs that are already perfectly balanced, have an Eulerian cycle rather than a strict path — in that case any node can serve as both start and end.
         start = end = next(iter(graph))
 
     # Build augmented graph with the artificial edge end -> start added
