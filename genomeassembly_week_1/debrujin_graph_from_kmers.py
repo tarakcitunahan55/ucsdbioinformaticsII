@@ -26,6 +26,8 @@ def build():
         else:
             holder[pre].append(suf) #if prefix is already present with a suffix, then append the new suffix (don't try to create a new element in holder and don't change the value of the existing one)
 
+        #holder.setdefault(pre, []).append(suf), alternatively in one line
+
     return holder
  #further you can connect k-1mers (pre and suf) as a Eulerian path to reconstruct genome
 
