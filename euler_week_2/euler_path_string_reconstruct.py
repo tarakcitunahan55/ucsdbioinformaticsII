@@ -1,8 +1,8 @@
 """
 String Reconstruction Problem
 ==============================
-Given a collection of k-mers (Patterns), reconstruct a string Text (linear genome) whose
-k-mer composition equals Patterns.
+Given a collection of k-mers (Patterns) (not in the order they found in genome), reconstruct a string Text (linear genome) 
+whose k-mer composition equals Patterns.
 
 Pipeline:
     1. DeBruijn(Patterns)   -> build the de Bruijn graph from the k-mers
