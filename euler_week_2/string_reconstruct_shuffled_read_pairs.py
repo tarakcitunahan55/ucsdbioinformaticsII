@@ -2,7 +2,7 @@
 StringReconstructionFromReadPairs
 =================================
 Reconstructs a genome from an unordered collection of paired k-mers
-(read pairs) separated by a known gap d.
+(read pairs) separated by a known gap d, assuming perfect coverage.
 
 Pipeline:
 - Each read pair (Left|Right) becomes an edge in a paired De Bruijn graph.
@@ -14,6 +14,10 @@ Pipeline:
   end node to the start node, turning the graph into an Eulerian cycle.
 - Find the Eulerian cycle using Hierholzer's algorithm, then remove the
   artificial edge to recover the original Eulerian path.
+- Because the graph may contain repeated (k-1)-mers, there can be more
+  than one topologically valid Eulerian path, but only one corresponds to
+  the true genome (the one consistent with the gap d). We therefore try
+  multiple randomized Eulerian paths until we find one that is consistent.
 - The ordered path of paired (k-1)-mers is then treated exactly like the
   ordered gapped patterns from the string_reconstruct_from_ordered_read_pairs.py problem.
 - Glue together the left (k-1)-mers to obtain PrefixString and the right
@@ -24,6 +28,7 @@ Pipeline:
   SuffixString to PrefixString to obtain the reconstructed genome.
 """
 
+import random
 from collections import defaultdict
 
 def read_gapped_patterns(file):
@@ -140,6 +145,25 @@ def eulerian_path(graph):
 
     return cycle  # if graph was already a true cycle
 
+
+def eulerian_path_consistent(graph, k, d, max_tries=2000):
+    """
+    The paired De Bruijn graph may admit multiple topologically valid
+    Eulerian paths (when it contains repeated (k-1)-mer nodes). Only one such path is consistent with the
+    gap d and actually spells out the true genome. This function retries
+    with randomly shuffled adjacency-list orderings until it finds an
+    Eulerian path whose PrefixString/SuffixString are consistent.
+    """
+    for _ in range(max_tries):
+        shuffled = {node: random.sample(neighbors, len(neighbors)) #Hierholzer's algorithm just returns some Eulerian path — determined by whatever order edges happen to sit in the adjacency lists (since remaining[current].pop() just pops from the end of a Python list, which is essentially an arbitrary order
+                    for node, neighbors in graph.items()} #randomly shuffle the order of neighbors to generate a different Eulerian path, if multiple exists
+        path = eulerian_path(shuffled)
+        genome = string_spelled_by_gapped_patterns(path, k, d)
+        if genome:
+            return genome
+    return None #if after max_tries no Eulerian path produced a consistent prefix string and suffix string
+
+
 def path_to_genome(patterns):
     """
     Glues overlapping k-1mer patterns into one string.
@@ -182,8 +206,6 @@ if __name__ == "__main__":
 
     graph = build_paired_debruijn_graph(gapped_patterns)
 
-    node_path = eulerian_path(graph)
-
-    genome = string_spelled_by_gapped_patterns(node_path, k, d)
+    genome = eulerian_path_consistent(graph, k, d)
 
     print(genome if genome else "No genome can be reconstructed.")

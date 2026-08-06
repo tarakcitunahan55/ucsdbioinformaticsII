@@ -1,7 +1,7 @@
 """
 String Reconstruction Problem
 ==============================
-Given a collection of k-mers (Patterns) (not in the order they found in genome), reconstruct a string Text (linear genome) 
+Given a collection of k-mers (Patterns) (not in the order they found in genome, but assuming perfect coverage), reconstruct a string Text (linear genome) 
 whose k-mer composition equals Patterns.
 
 Pipeline:
