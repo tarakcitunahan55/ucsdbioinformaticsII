@@ -3,6 +3,7 @@ StringReconstructionFromReadPairs
 =================================
 Reconstructs a genome from an unordered collection of paired k-mers
 (read pairs) separated by a known gap d, assuming perfect coverage.
+Length of repeats should be shorter than the span of a read pair (2k+d).
 
 Pipeline:
 - Each read pair (Left|Right) becomes an edge in a paired De Bruijn graph.

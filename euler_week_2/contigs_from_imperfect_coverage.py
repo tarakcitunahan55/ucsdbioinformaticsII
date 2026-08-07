@@ -2,7 +2,8 @@
 ContigGeneration
 =================
 Assembles contigs from a collection of k-mers with imperfect coverage,
-where a full Eulerian path across the whole genome isn't possible.
+where a full Eulerian path across the whole genome isn't possible 
+(or the length of repeats are longer than our reads and prevents us from finding single Eularian path across the whole genome).
 
 Pipeline:
 - Build a de Bruijn graph from the k-mers/reads: each k-mer becomes a directed
@@ -15,6 +16,10 @@ Pipeline:
   every contig together into the full genome (we also don't know the order of contigs in genome and to which strand any belongs).
 - Glue each path's (k-1)-mers into a contig by taking the first node in
   full, then appending only the last character of every subsequent node.
+- NOT IN THIS CODE - FURTHER STEPS (Scaffolding): A read pair whose two reads land in two DIFFERENT contigs tells us
+  those contigs are neighbors in the genome, and the known insert size d lets us estimate the gap between them -> chain linked contigs into ordered scaffolds
+  (gaps filled with placeholder 'N's). We assume all contigs are on the same strand. To be more accurate, take reverse complement
+  of reads from read pairs and if both match some contig, then take reverse-complement of the contig in the final scaffold.
 """
 
 def read_patterns(file):
