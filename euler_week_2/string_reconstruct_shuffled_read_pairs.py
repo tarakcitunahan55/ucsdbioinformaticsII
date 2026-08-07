@@ -27,6 +27,10 @@ Pipeline:
   (k + d) positions, so their overlapping characters must match.
 - If they are consistent, append the last (k+d) characters of
   SuffixString to PrefixString to obtain the reconstructed genome.
+- ONE CAVEAT: If length of repeats > length of reads, there will be multiple Eularian paths
+  all might be passing the prefix/suffix consistency check — only one of which is the true genome.
+  Then, find contigs and scaffolds instead, if you don't have longer reads. 
+
 """
 
 import random
