@@ -3,6 +3,7 @@ String Reconstruction Problem
 ==============================
 Given a collection of k-mers (Patterns) (not in the order they found in genome, but assuming perfect coverage), reconstruct a string Text (linear genome) 
 whose k-mer composition equals Patterns.
+Length of repeats should be shorter than the span of a k-mer read to get a unique Eulerian path.
 
 Pipeline:
     1. DeBruijn(Patterns)   -> build the de Bruijn graph from the k-mers
