@@ -15,6 +15,9 @@ Pipeline:
   re-summing amino acids over and over for each subpeptide.
 - Collect all these differences, plus the mass 0 for the empty
   subpeptide, and sort the result.
+- One Simplification: The amino acid masses correspond to residues forming peptide bonds (aa in a protein), so the corresponding
+N-terminus is NH, while C-terminus is CO (H2O lost in peptide bond formation). The linear peptide has 
+1 free N-termnius (NH3+) and 1 free C-terminus (COO-). Actually, we need to add 1 mol H20 mass (18 Da) to subpeptides.
 """
 
 # Standard integer mass table for 20 amino acids.
