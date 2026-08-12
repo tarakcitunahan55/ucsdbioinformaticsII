@@ -104,7 +104,7 @@ def cyclopeptide_sequencing(spectrum):
             elif is_consistent(peptide, spectrum_counts):
                 survivors.append(peptide)
             # else: inconsistent -> not appended to survivors, so discarded (bounding step)
- #peptide whose mass equals the parent mass is never appended to survivors (connot be extended anymore)
+ #peptide whose mass equals the parent mass is never appended to survivors (cannot be extended anymore)
         candidate_peptides = survivors #new candidates to be extended
 
     return final_peptides
@@ -119,4 +119,4 @@ def read_spectrum(file):
 if __name__ == "__main__":
     spectrum = read_spectrum("antibiotics_week_3/spectrum.txt")
     peptides = cyclopeptide_sequencing(spectrum)
-    print(*("-".join(map(str, p)) for p in peptides)) #make each element of peptide list p a string since join requires
+    print(*("-".join(map(str, p)) for p in peptides)) #make each element of peptide list p a string since ".join" requires strings
