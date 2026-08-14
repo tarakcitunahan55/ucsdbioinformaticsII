@@ -21,6 +21,9 @@ Branch-and-bound loop:
       sub-multiset of the given spectrum ("consistent") -- inconsistent
       candidates can never grow into a valid answer, so cutting them
       early is what keeps this tractable
+
+One caveat: only works in the case of an ideal spectrum (experimental spectrum of a peptide coincides exactly with its theoretical spectrum)
+In reality, mass spectrometers generate false or missing masses (noisy spectra). Use scoring to account for experimental spectra errors.
 """
 
 from collections import Counter

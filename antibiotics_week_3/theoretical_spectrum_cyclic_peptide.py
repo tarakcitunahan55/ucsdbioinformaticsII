@@ -25,7 +25,7 @@ to the resulting subpeptides, not as a simplification like in linear spectrum, b
 """
 
 # Standard integer mass table for 20 amino acids.
-# Some amino acids share the same integer mass, so the LinearSpectrum can't always uniquely determine the peptide.
+# Some amino acids share the same integer mass, so the Cyclic Spectrum can't always uniquely determine the peptide.
 AMINO_ACID_MASS = {
     'G': 57,  'A': 71,  'S': 87,  'P': 97,  'V': 99,
     'T': 101, 'C': 103, 'I': 113, 'L': 113, 'N': 114,
