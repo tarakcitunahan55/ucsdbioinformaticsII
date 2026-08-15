@@ -23,7 +23,7 @@ Branch-and-bound loop:
       early is what keeps this tractable
 
 One caveat: only works in the case of an ideal spectrum (experimental spectrum of a peptide coincides exactly with its theoretical spectrum)
-In reality, mass spectrometers generate false or missing masses (noisy spectra). Use scoring to account for experimental spectra errors.
+In reality, mass spectrometers generate false or missing masses (noisy spectra). Use scoring (leaderboard_cyclopeptide_seq_score.py) to account for experimental spectra errors.
 """
 
 from collections import Counter
@@ -40,7 +40,7 @@ def peptide_mass(peptide):
 
 
 def linear_spectrum(peptide):
-    """Sorted list of all contiguous (non-wrapping) linear subpeptide masses, plus 0."""
+    """List of all contiguous (non-wrapping) linear subpeptide masses, plus 0."""
     n = len(peptide)
     prefix_mass = [0] * (n + 1)
     for i in range(1, n + 1):
@@ -54,7 +54,7 @@ def linear_spectrum(peptide):
 
 
 def cyclic_spectrum(peptide):
-    """Sorted list of all subpeptide masses including wrap-around ones, plus 0 and total mass."""
+    """List of all subpeptide masses including wrap-around ones, plus 0 and total mass."""
     n = len(peptide)
     prefix_mass = [0] * (n + 1)
     for i in range(1, n + 1):

@@ -1,7 +1,7 @@
 """
 CyclopeptideScoring
 ========================
-Compare an experimental spectrum with the theoretical spectrum of the peptide. Count the number of matching masses.
+Compare an experimental spectrum with the theoretical cyclic spectrum of the peptide. Count the number of matching masses.
 This is important when the experimental spectrum is not ideal and have erroneous or missing masses.
 """
 from collections import Counter
@@ -19,7 +19,7 @@ amino_acid_mass = {
 
 def cyclic_spectrum(peptide):
     """
-    Returns the sorted theoretical (cyclic) spectrum of peptide (including 0 and total mass).
+    Returns the theoretical (cyclic) spectrum of peptide (including 0 and total mass).
     """
     n = len(peptide)
 
@@ -46,7 +46,7 @@ def cyclic_spectrum(peptide):
             if i > 0 and j < n:
                 spectrum.append(total_mass - subpeptide_mass)
 
-    return sorted(spectrum)
+    return spectrum
 
 
 theoretical_spectrum = cyclic_spectrum("KVQKEPRFWPYDQEKNKSCQICNRLHDSMGYVWSVGLDYLASG")
