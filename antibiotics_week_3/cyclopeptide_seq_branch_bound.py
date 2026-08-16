@@ -28,6 +28,8 @@ In reality, mass spectrometers generate false or missing masses (noisy spectra).
 
 from collections import Counter
 
+#18 unique amino acid residue integer masses (unique residue masses of 20 proteinogenic amino acids, excluding pyrrolysine and selenocysteine)
+#I, L (113 Da); K, Q (128 Da) have same integer masses
 AMINO_ACID_MASSES = [
     57, 71, 87, 97, 99, 101, 103, 113, 114,
     115, 128, 129, 131, 137, 147, 156, 163, 186
@@ -121,5 +123,5 @@ def read_spectrum(file):
 
 if __name__ == "__main__":
     spectrum = read_spectrum("antibiotics_week_3/spectrum.txt")
-    peptides = cyclopeptide_sequencing(spectrum)
+    peptides = cyclopeptide_sequencing(spectrum) #each one represents a cyclic peptide, written linearly in answers, so we can get multiple linear answers which represent the same cyclic peptide like -> [1,2,3] and [2,3,1] and [3,1,2]
     print(*("-".join(map(str, p)) for p in peptides)) #make each element of peptide list p a string since ".join" requires strings

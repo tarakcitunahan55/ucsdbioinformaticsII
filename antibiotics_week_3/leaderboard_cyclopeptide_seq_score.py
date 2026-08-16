@@ -26,20 +26,41 @@ The algorithm grows candidate peptides one amino acid at a time
    since the full branching tree grows exponentially.
 6. Repeat steps 2-5 until no candidates remain.
 
-The result is the best scoring peptide found, expressed as a list of
+The result is the best scoring peptides found, expressed as lists of
 integer amino acid masses (since several amino acids share the
 same integer mass, the exact letter sequence can't always be
-recovered uniquely). Usage of best-scoring instead of looking for direct spectra match
+recovered uniquely). Usage of best-scoring instead of looking for exact spectra match
 is more realistic, accounting for experimental spectra errors. Here, assume that parent mass is found exactly in
 experimental spectrum (which is easy to find in real practice).
+
+Caveat: as the experimental spectrum gets noisy (more false/missing masses), this heuristic
+algorithm can return incorrect peptides.
+
+Trimming is irreversible: once a peptide is cut from the leaderboard, it can never come back.
+False masses (noise peaks) can make an incorrect peptide score higher than it should, while
+missing masses (true peaks lost to noise) can make the true peptide score lower than it should.
+If this pushes the true peptide out of the top N at any intermediate round, it is discarded
+for good — even though it may have gone on to be the correct final answer.
+
+Even if the true peptide survives every trimming round, noise can still cause an incorrect
+peptide to tie or outscore it at the final comparison, causing the wrong peptide to be
+returned as the leader.
 """
 from collections import Counter
 
+#18 unique amino acid residue integer masses (unique residue masses of 20 proteinogenic amino acids, excluding pyrrolysine and selenocysteine)
+#I, L (113 Da); K, Q (128 Da) have same integer masses
 amino_acid_mass = [
     57, 71, 87, 97, 99, 101, 103, 113, 114,
     115, 128, 129, 131, 137, 147, 156, 163, 186
 ]
 
+"""
+# Extended amino acid masses of all proteinogenic and non-proteinogenic amino acids since non-ribosomal peptides/NRPs (our antibiotic cyclopeptide in this case)
+# can include non-proteinogenic amino acids as NRPs are not synthesized in ribosomes.
+# However, using this algorithm with extended mass table will generate lots of incorrect candidate peptides.
+# Instead, we must determine the amino acid composition of a peptide from its spectrum so that we may run LeaderboardCyclopeptideSequencing on this smaller alphabet of amino acids.
+amino_acid_mass = list(range(57, 201))"""
 
 def peptide_mass(peptide):
     """Total mass of a peptide."""
@@ -116,17 +137,18 @@ def trim(N, experimental_spectrum, leaderboard):
         return leaderboard
 
     (x,y)=sorted_scores[N-1] # N-1 since list indexing starts counting from 0
-    trimmed_leaderboard=[list(a) for (a,b) in sorted_scores if b>=y]
+    trimmed_leaderboard=[list(a) for (a,b) in sorted_scores if b>=y] #"list(a)" is here because of the earlier step we had to convert peptides into tuples to use them as dictionary keys — and now we convert them back into lists, since that's the data type the rest of algorithm expects.
     leaderboard=trimmed_leaderboard
     return leaderboard
 
 
 def leaderboard_cyclopeptide_sequencing(spectrum, N):
-    """Returns leader peptide whose cyclic spectrum best matches the experimental spectrum."""
+    """Returns all leader peptides whose cyclic spectrum best matches the experimental spectrum."""
     parent_mass = max(spectrum)
 
     leaderboard = [[]]
-    leaderpeptide = []
+    leaderpeptides = []
+    leader_score = 0
 
     while leaderboard:
         leaderboard = expand(leaderboard)
@@ -135,15 +157,20 @@ def leaderboard_cyclopeptide_sequencing(spectrum, N):
 
         for peptide in leaderboard:
             if peptide_mass(peptide) == parent_mass:
-                if score(cyclic_spectrum(peptide), spectrum) > score(cyclic_spectrum(leaderpeptide), spectrum):
-                    leaderpeptide = peptide
+                peptide_score = score(cyclic_spectrum(peptide), spectrum)
+                if peptide_score > leader_score:
+                    leaderpeptides = [peptide]
+                    leader_score = peptide_score
+                elif peptide_score == leader_score:
+                    leaderpeptides.append(peptide)
 
         leaderboard = trim(N, spectrum, leaderboard)
 
-    return leaderpeptide
+    return leaderpeptides #if there are multiple highest scoring peptides, all of them are getting returned
 
 
 if __name__ == "__main__":
     experimental_spectrum = read_experimental_spectrum("antibiotics_week_3/spectrum.txt")
-    leaderpeptide = leaderboard_cyclopeptide_sequencing(experimental_spectrum, 161)
-    print("-".join(map(str,leaderpeptide)))
+    leaderpeptides = leaderboard_cyclopeptide_sequencing(experimental_spectrum, 1000)
+    for peptide in leaderpeptides: #each one represents a cyclic peptide, written linearly in answers, so we can get multiple linear answers which represent the same cyclic peptide like -> [1,2,3] and [2,3,1] and [3,1,2]
+        print("-".join(map(str,peptide)),end=" ")
