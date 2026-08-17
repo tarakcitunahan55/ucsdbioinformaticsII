@@ -30,7 +30,7 @@ def linear_spectrum(peptide):
     return spectrum
 
 
-theoretical_spectrum = linear_spectrum("AIYIATGECGIVPKANVGCWRKWEMDPMAHKFKWRK")
+theoretical_spectrum = linear_spectrum("PEEP")
 
 def read_experimental_spectrum(file):
     """Reads a single line of space separated integer masses."""

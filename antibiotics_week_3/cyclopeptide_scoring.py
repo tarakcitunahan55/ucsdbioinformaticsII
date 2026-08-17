@@ -49,7 +49,7 @@ def cyclic_spectrum(peptide):
     return spectrum
 
 
-theoretical_spectrum = cyclic_spectrum("KVQKEPRFWPYDQEKNKSCQICNRLHDSMGYVWSVGLDYLASG")
+theoretical_spectrum = cyclic_spectrum("MAMA")
 
 def read_experimental_spectrum(file):
     """Reads a single line of space separated integer masses."""

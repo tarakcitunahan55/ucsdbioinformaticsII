@@ -24,6 +24,7 @@ Branch-and-bound loop:
 
 One caveat: only works in the case of an ideal spectrum (experimental spectrum of a peptide coincides exactly with its theoretical spectrum)
 In reality, mass spectrometers generate false or missing masses (noisy spectra). Use scoring (leaderboard_cyclopeptide_seq_score.py) to account for experimental spectra errors.
+Also, instead of branching with every possible 18 aa mass, you can restrict the masses to just single amino acid masses found in given ideal spectrum (more efficient).
 """
 
 from collections import Counter
@@ -118,7 +119,7 @@ def cyclopeptide_sequencing(spectrum):
 def read_spectrum(file):
     """Reads a single line of space separated integer masses."""
     with open(file, "r") as f:
-        return [int(x) for x in f.readline().split()]
+        return [int(x) for x in f.readline().split()] #list(map(int,f.readline().split())) 
 
 
 if __name__ == "__main__":
