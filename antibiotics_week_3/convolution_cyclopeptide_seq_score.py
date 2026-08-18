@@ -8,7 +8,7 @@ than assuming the 18 standard integer masses (or >100 masses including all prote
 
 Since non-ribosomal peptides (cyclopeptide antibiotics like Tyrocidines in our case) can contain
 non-proteinogenic amino acids, the 18-mass table used before isn't
-the right alphabet. Since extended table has 144 aa.s, spectral convolution
+the right alphabet. Since extended table has 144 aa masses, spectral convolution
 recovers plausible amino acid masses empirically rather than using all 144 and generating lots of incorrect peptides:
 
 1. Compute the convolution: every positive pairwise difference

@@ -2,7 +2,7 @@
 StringReconstructionFromReadPairs
 =================================
 Reconstructs a genome from an unordered collection of paired k-mers
-(read pairs) separated by a known gap d, assuming perfect coverage.
+(read pairs) separated by a known gap d (constant), assuming perfect coverage.
 Length of repeats should be shorter than the span of a read pair (2k+d).
 
 Pipeline:
@@ -31,6 +31,9 @@ Pipeline:
   all might be passing the prefix/suffix consistency check — only one of which is the true genome.
   Then, find contigs and scaffolds instead, if you don't have longer reads. 
 
+This code assumes FF (forward-forward) orientation of paired ends on the same strand: both reads in every pair are treated as forward-strand substrings, read in the same left-to-right direction,
+but it's a step removed from real Illumina data, which is genuinely FR ("innie" orientation — reads point toward each other from opposite strands). 
+To use this code on real FR paired-end reads, you'd need a preprocessing step that reverse-complements one read of each pair before treating them as (Left, Right), so they end up expressed in the same forward-forward coordinate frame this algorithm assumes.
 """
 
 import random
